@@ -4,7 +4,7 @@ FROM appsvctest/php-build-7.2:latest as php7.2-build
 FROM appsvctest/python-3.6-build:latest as python-3.6-build
 FROM appsvctest/python-3.7-build:latest as python-3.7-build
 
-FROM buildpack-deps:jessie-curl as main
+FROM oryxdevms/build:latest as main
 MAINTAINER Nazim Lala <naziml@microsoft.com>
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -69,128 +69,128 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
   && cp mod_mono.so.0.0.0 /usr/lib/apache2/modules/mod_mono.so.0.0.0
 
 # Install npm and node
-RUN mkdir -p /opt/npm/2.15.8/node_modules \
-  && unzip -q /tmp/npm-2.15.8.zip -d /opt/npm/2.15.8/node_modules \
-  && mv /opt/npm/2.15.8/node_modules/npm-2.15.8 /opt/npm/2.15.8/node_modules/npm \
-  && ln -s /opt/npm/2.15.8/node_modules/npm/bin/npm /opt/npm/2.15.8/npm \
-  && chmod -R 755 /opt/npm/2.15.8/node_modules/npm/bin \
-  && mkdir -p /opt/npm/2.15.9/node_modules \
-  && unzip -q /tmp/npm-2.15.9.zip -d /opt/npm/2.15.9/node_modules \
-  && mv /opt/npm/2.15.9/node_modules/npm-2.15.9 /opt/npm/2.15.9/node_modules/npm \
-  && ln -s /opt/npm/2.15.9/node_modules/npm/bin/npm /opt/npm/2.15.9/npm \
-  && chmod -R 755 /opt/npm/2.15.9/node_modules/npm/bin \
-  && mkdir -p /opt/npm/3.9.5/node_modules \
-  && unzip -q /tmp/npm-3.9.5.zip -d /opt/npm/3.9.5/node_modules \
-  && mv /opt/npm/3.9.5/node_modules/npm-3.9.5 /opt/npm/3.9.5/node_modules/npm \
-  && ln -s /opt/npm/3.9.5/node_modules/npm/bin/npm /opt/npm/3.9.5/npm \
-  && chmod -R 755 /opt/npm/3.9.5/node_modules/npm/bin \
-  && mkdir -p /opt/npm/3.10.3/node_modules \
-  && unzip -q /tmp/npm-3.10.3.zip -d /opt/npm/3.10.3/node_modules \
-  && mv /opt/npm/3.10.3/node_modules/npm-3.10.3 /opt/npm/3.10.3/node_modules/npm \
-  && ln -s /opt/npm/3.10.3/node_modules/npm/bin/npm /opt/npm/3.10.3/npm \
-  && chmod -R 755 /opt/npm/3.10.3/node_modules/npm/bin \
-  && mkdir -p /opt/npm/3.10.10/node_modules \
-  && unzip -q /tmp/npm-3.10.10.zip -d /opt/npm/3.10.10/node_modules \
-  && mv /opt/npm/3.10.10/node_modules/npm-3.10.10 /opt/npm/3.10.10/node_modules/npm \
-  && ln -s /opt/npm/3.10.10/node_modules/npm/bin/npm /opt/npm/3.10.10/npm \
-  && chmod -R 755 /opt/npm/3.10.10/node_modules/npm/bin \
-  && mkdir -p /opt/npm/5.0.3/node_modules \
-  && unzip -q /tmp/npm-5.0.3.zip -d /opt/npm/5.0.3/node_modules \
-  && mv /opt/npm/5.0.3/node_modules/npm-5.0.3 /opt/npm/5.0.3/node_modules/npm \
-  && ln -s /opt/npm/5.0.3/node_modules/npm/bin/npm /opt/npm/5.0.3/npm \
-  && chmod -R 755 /opt/npm/5.0.3/node_modules/npm/bin \
-  && mkdir -p /opt/npm/5.4.2/node_modules \
-  && unzip -q /tmp/npm-5.4.2.zip -d /opt/npm/5.4.2/node_modules \
-  && mv /opt/npm/5.4.2/node_modules/npm-5.4.2 /opt/npm/5.4.2/node_modules/npm \
-  && ln -s /opt/npm/5.4.2/node_modules/npm/bin/npm /opt/npm/5.4.2/npm \
-  && chmod -R 755 /opt/npm/5.4.2/node_modules/npm/bin \
-  && mkdir -p /opt/npm/5.6.0/node_modules \
-  && unzip -q /tmp/npm-5.6.0.zip -d /opt/npm/5.6.0/node_modules \
-  && mv /opt/npm/5.6.0/node_modules/npm-5.6.0 /opt/npm/5.6.0/node_modules/npm \
-  && ln -s /opt/npm/5.6.0/node_modules/npm/bin/npm /opt/npm/5.6.0/npm \
-  && chmod -R 755 /opt/npm/5.6.0/node_modules/npm/bin \
-  && mkdir -p /opt/npm/6.0.1/node_modules \
-  && unzip -q /tmp/npm-6.0.1.zip -d /opt/npm/6.0.1/node_modules \
-  && mv /opt/npm/6.0.1/node_modules/npm-6.0.1 /opt/npm/6.0.1/node_modules/npm \
-  && ln -s /opt/npm/6.0.1/node_modules/npm/bin/npm /opt/npm/6.0.1/npm \
-  && chmod -R 755 /opt/npm/6.0.1/node_modules/npm/bin \
-  && chown -R root:root /opt/npm \
-  && mkdir -p /opt/nodejs \
-  && tar xfJ /tmp/node-v4.4.7-linux-x64.tar.xz -C /opt/nodejs \
-  && rm -f node-v4.4.7-linux-x64.tar.xz \
-  && mv /opt/nodejs/node-v4.4.7-linux-x64 /opt/nodejs/4.4.7 \
-  && echo "2.15.8" > /opt/nodejs/4.4.7/npm.txt \
-  && mkdir -p /opt/nodejs \
-  && tar xfJ /tmp/node-v4.5.0-linux-x64.tar.xz -C /opt/nodejs \
-  && rm -f node-v4.5.0-linux-x64.tar.xz \
-  && mv /opt/nodejs/node-v4.5.0-linux-x64 /opt/nodejs/4.5.0 \
-  && echo "2.15.9" > /opt/nodejs/4.5.0/npm.txt \
-  && tar xfJ /tmp/node-v6.2.2-linux-x64.tar.xz -C /opt/nodejs \
-  && rm -f node-v6.2.2-linux-x64.tar.xz \
-  && mv /opt/nodejs/node-v6.2.2-linux-x64 /opt/nodejs/6.2.2 \
-  && echo "3.9.5" > /opt/nodejs/6.2.2/npm.txt \
-  && tar xfJ /tmp/node-v6.6.0-linux-x64.tar.xz -C /opt/nodejs \
-  && rm -f node-v6.6.0-linux-x64.tar.xz \
-  && mv /opt/nodejs/node-v6.6.0-linux-x64 /opt/nodejs/6.6.0 \
-  && echo "3.10.3" > /opt/nodejs/6.6.0/npm.txt \
-  && tar xfJ /tmp/node-v6.9.3-linux-x64.tar.xz -C /opt/nodejs \
-  && rm -f node-v6.9.3-linux-x64.tar.xz \
-  && mv /opt/nodejs/node-v6.9.3-linux-x64 /opt/nodejs/6.9.3 \
-  && echo "3.10.10" > /opt/nodejs/6.9.3/npm.txt \
-  && tar xfJ /tmp/node-v6.10.3-linux-x64.tar.xz -C /opt/nodejs \
-  && rm -f node-v6.10.3-linux-x64.tar.xz \
-  && mv /opt/nodejs/node-v6.10.3-linux-x64 /opt/nodejs/6.10.3 \
-  && echo "3.10.10" > /opt/nodejs/6.10.3/npm.txt \
-  && tar xfJ /tmp/node-v6.11.0-linux-x64.tar.xz -C /opt/nodejs \
-  && rm -f node-v6.11.0-linux-x64.tar.xz \
-  && mv /opt/nodejs/node-v6.11.0-linux-x64 /opt/nodejs/6.11.0 \
-  && echo "3.10.10" > /opt/nodejs/6.11.0/npm.txt \
-  && tar xfJ /tmp/node-v8.0.0-linux-x64.tar.xz -C /opt/nodejs \
-  && rm -f node-v8.0.0-linux-x64.tar.xz \
-  && mv /opt/nodejs/node-v8.0.0-linux-x64 /opt/nodejs/8.0.0 \
-  && echo "5.0.3" > /opt/nodejs/8.0.0/npm.txt \
-  && tar xfJ /tmp/node-v8.1.0-linux-x64.tar.xz -C /opt/nodejs \
-  && rm -f node-v8.1.0-linux-x64.tar.xz \
-  && mv /opt/nodejs/node-v8.1.0-linux-x64 /opt/nodejs/8.1.0 \
-  && echo "5.0.3" > /opt/nodejs/8.1.0/npm.txt \
-  && tar xfJ /tmp/node-v8.2.1-linux-x64.tar.xz -C /opt/nodejs \
-  && rm -f node-v8.2.1-linux-x64.tar.xz \
-  && mv /opt/nodejs/node-v8.2.1-linux-x64 /opt/nodejs/8.2.1 \
-  && echo "5.4.2" > /opt/nodejs/8.2.1/npm.txt \
-  && tar xfJ /tmp/node-v8.8.1-linux-x64.tar.xz -C /opt/nodejs \
-  && rm -f node-v8.8.1-linux-x64.tar.xz \
-  && mv /opt/nodejs/node-v8.8.1-linux-x64 /opt/nodejs/8.8.1 \
-  && echo "5.4.2" > /opt/nodejs/8.8.1/npm.txt \
-  && tar xfJ /tmp/node-v8.9.4-linux-x64.tar.xz -C /opt/nodejs \
-  && rm -f node-v8.9.4-linux-x64.tar.xz \
-  && mv /opt/nodejs/node-v8.9.4-linux-x64 /opt/nodejs/8.9.4 \
-  && echo "5.6.0" > /opt/nodejs/8.9.4/npm.txt \
-  && tar xfJ /tmp/node-v8.11.2-linux-x64.tar.xz -C /opt/nodejs \
-  && rm -f node-v8.11.2-linux-x64.tar.xz \
-  && mv /opt/nodejs/node-v8.11.2-linux-x64 /opt/nodejs/8.11.2 \
-  && echo "5.6.0" > /opt/nodejs/8.11.2/npm.txt \
-  && tar xfJ /tmp/node-v9.4.0-linux-x64.tar.xz -C /opt/nodejs \
-  && rm -f node-v9.4.0-linux-x64.tar.xz \
-  && mv /opt/nodejs/node-v9.4.0-linux-x64 /opt/nodejs/9.4.0 \
-  && echo "5.6.0" > /opt/nodejs/9.4.0/npm.txt \
-  && tar xfJ /tmp/node-v10.1.0-linux-x64.tar.xz -C /opt/nodejs \
-  && rm -f node-v10.1.0-linux-x64.tar.xz \
-  && mv /opt/nodejs/node-v10.1.0-linux-x64 /opt/nodejs/10.1.0 \
-  && echo "6.0.1" > /opt/nodejs/10.1.0/npm.txt \
-  && chown -R root:root /opt/nodejs \
-  && ln -s /opt/nodejs/6.11.0/bin/node /opt/nodejs/node \
-  && ln -s /opt/nodejs/6.11.0/npm.txt /opt/nodejs/npm.txt \
-  && rm -f /usr/bin/node \
-  && ln -s /opt/nodejs/6.11.0/bin/node /usr/bin/node \
-  && rm -f /opt/nodejs/6.11.0/bin/npm \
-  && ln -s /opt/npm/3.10.10/node_modules/npm/bin/npm /opt/nodejs/npm \
-  && ln -s /opt/npm/3.10.10/node_modules /opt/nodejs/node_modules \
-  && rm -rf /usr/bin/npm \
-  && ln -s /opt/npm/3.10.10/node_modules/npm/bin/npm /usr/bin/npm \
-  && ln -s /opt/npm/3.10.10/node_modules/npm/bin/npm-cli.js /usr/bin/npm-cli.js \
-  && ln -s /opt/npm/3.10.10/node_modules /usr/bin/node_modules
+# RUN mkdir -p /opt/npm/2.15.8/node_modules \
+#   && unzip -q /tmp/npm-2.15.8.zip -d /opt/npm/2.15.8/node_modules \
+#   && mv /opt/npm/2.15.8/node_modules/npm-2.15.8 /opt/npm/2.15.8/node_modules/npm \
+#   && ln -s /opt/npm/2.15.8/node_modules/npm/bin/npm /opt/npm/2.15.8/npm \
+#   && chmod -R 755 /opt/npm/2.15.8/node_modules/npm/bin \
+#   && mkdir -p /opt/npm/2.15.9/node_modules \
+#   && unzip -q /tmp/npm-2.15.9.zip -d /opt/npm/2.15.9/node_modules \
+#   && mv /opt/npm/2.15.9/node_modules/npm-2.15.9 /opt/npm/2.15.9/node_modules/npm \
+#   && ln -s /opt/npm/2.15.9/node_modules/npm/bin/npm /opt/npm/2.15.9/npm \
+#   && chmod -R 755 /opt/npm/2.15.9/node_modules/npm/bin \
+#   && mkdir -p /opt/npm/3.9.5/node_modules \
+#   && unzip -q /tmp/npm-3.9.5.zip -d /opt/npm/3.9.5/node_modules \
+#   && mv /opt/npm/3.9.5/node_modules/npm-3.9.5 /opt/npm/3.9.5/node_modules/npm \
+#   && ln -s /opt/npm/3.9.5/node_modules/npm/bin/npm /opt/npm/3.9.5/npm \
+#   && chmod -R 755 /opt/npm/3.9.5/node_modules/npm/bin \
+#   && mkdir -p /opt/npm/3.10.3/node_modules \
+#   && unzip -q /tmp/npm-3.10.3.zip -d /opt/npm/3.10.3/node_modules \
+#   && mv /opt/npm/3.10.3/node_modules/npm-3.10.3 /opt/npm/3.10.3/node_modules/npm \
+#   && ln -s /opt/npm/3.10.3/node_modules/npm/bin/npm /opt/npm/3.10.3/npm \
+#   && chmod -R 755 /opt/npm/3.10.3/node_modules/npm/bin \
+#   && mkdir -p /opt/npm/3.10.10/node_modules \
+#   && unzip -q /tmp/npm-3.10.10.zip -d /opt/npm/3.10.10/node_modules \
+#   && mv /opt/npm/3.10.10/node_modules/npm-3.10.10 /opt/npm/3.10.10/node_modules/npm \
+#   && ln -s /opt/npm/3.10.10/node_modules/npm/bin/npm /opt/npm/3.10.10/npm \
+#   && chmod -R 755 /opt/npm/3.10.10/node_modules/npm/bin \
+#   && mkdir -p /opt/npm/5.0.3/node_modules \
+#   && unzip -q /tmp/npm-5.0.3.zip -d /opt/npm/5.0.3/node_modules \
+#   && mv /opt/npm/5.0.3/node_modules/npm-5.0.3 /opt/npm/5.0.3/node_modules/npm \
+#   && ln -s /opt/npm/5.0.3/node_modules/npm/bin/npm /opt/npm/5.0.3/npm \
+#   && chmod -R 755 /opt/npm/5.0.3/node_modules/npm/bin \
+#   && mkdir -p /opt/npm/5.4.2/node_modules \
+#   && unzip -q /tmp/npm-5.4.2.zip -d /opt/npm/5.4.2/node_modules \
+#   && mv /opt/npm/5.4.2/node_modules/npm-5.4.2 /opt/npm/5.4.2/node_modules/npm \
+#   && ln -s /opt/npm/5.4.2/node_modules/npm/bin/npm /opt/npm/5.4.2/npm \
+#   && chmod -R 755 /opt/npm/5.4.2/node_modules/npm/bin \
+#   && mkdir -p /opt/npm/5.6.0/node_modules \
+#   && unzip -q /tmp/npm-5.6.0.zip -d /opt/npm/5.6.0/node_modules \
+#   && mv /opt/npm/5.6.0/node_modules/npm-5.6.0 /opt/npm/5.6.0/node_modules/npm \
+#   && ln -s /opt/npm/5.6.0/node_modules/npm/bin/npm /opt/npm/5.6.0/npm \
+#   && chmod -R 755 /opt/npm/5.6.0/node_modules/npm/bin \
+#   && mkdir -p /opt/npm/6.0.1/node_modules \
+#   && unzip -q /tmp/npm-6.0.1.zip -d /opt/npm/6.0.1/node_modules \
+#   && mv /opt/npm/6.0.1/node_modules/npm-6.0.1 /opt/npm/6.0.1/node_modules/npm \
+#   && ln -s /opt/npm/6.0.1/node_modules/npm/bin/npm /opt/npm/6.0.1/npm \
+#   && chmod -R 755 /opt/npm/6.0.1/node_modules/npm/bin \
+#   && chown -R root:root /opt/npm \
+#   && mkdir -p /opt/nodejs \
+#   && tar xfJ /tmp/node-v4.4.7-linux-x64.tar.xz -C /opt/nodejs \
+#   && rm -f node-v4.4.7-linux-x64.tar.xz \
+#   && mv /opt/nodejs/node-v4.4.7-linux-x64 /opt/nodejs/4.4.7 \
+#   && echo "2.15.8" > /opt/nodejs/4.4.7/npm.txt \
+#   && mkdir -p /opt/nodejs \
+#   && tar xfJ /tmp/node-v4.5.0-linux-x64.tar.xz -C /opt/nodejs \
+#   && rm -f node-v4.5.0-linux-x64.tar.xz \
+#   && mv /opt/nodejs/node-v4.5.0-linux-x64 /opt/nodejs/4.5.0 \
+#   && echo "2.15.9" > /opt/nodejs/4.5.0/npm.txt \
+#   && tar xfJ /tmp/node-v6.2.2-linux-x64.tar.xz -C /opt/nodejs \
+#   && rm -f node-v6.2.2-linux-x64.tar.xz \
+#   && mv /opt/nodejs/node-v6.2.2-linux-x64 /opt/nodejs/6.2.2 \
+#   && echo "3.9.5" > /opt/nodejs/6.2.2/npm.txt \
+#   && tar xfJ /tmp/node-v6.6.0-linux-x64.tar.xz -C /opt/nodejs \
+#   && rm -f node-v6.6.0-linux-x64.tar.xz \
+#   && mv /opt/nodejs/node-v6.6.0-linux-x64 /opt/nodejs/6.6.0 \
+#   && echo "3.10.3" > /opt/nodejs/6.6.0/npm.txt \
+#   && tar xfJ /tmp/node-v6.9.3-linux-x64.tar.xz -C /opt/nodejs \
+#   && rm -f node-v6.9.3-linux-x64.tar.xz \
+#   && mv /opt/nodejs/node-v6.9.3-linux-x64 /opt/nodejs/6.9.3 \
+#   && echo "3.10.10" > /opt/nodejs/6.9.3/npm.txt \
+#   && tar xfJ /tmp/node-v6.10.3-linux-x64.tar.xz -C /opt/nodejs \
+#   && rm -f node-v6.10.3-linux-x64.tar.xz \
+#   && mv /opt/nodejs/node-v6.10.3-linux-x64 /opt/nodejs/6.10.3 \
+#   && echo "3.10.10" > /opt/nodejs/6.10.3/npm.txt \
+#   && tar xfJ /tmp/node-v6.11.0-linux-x64.tar.xz -C /opt/nodejs \
+#   && rm -f node-v6.11.0-linux-x64.tar.xz \
+#   && mv /opt/nodejs/node-v6.11.0-linux-x64 /opt/nodejs/6.11.0 \
+#   && echo "3.10.10" > /opt/nodejs/6.11.0/npm.txt \
+#   && tar xfJ /tmp/node-v8.0.0-linux-x64.tar.xz -C /opt/nodejs \
+#   && rm -f node-v8.0.0-linux-x64.tar.xz \
+#   && mv /opt/nodejs/node-v8.0.0-linux-x64 /opt/nodejs/8.0.0 \
+#   && echo "5.0.3" > /opt/nodejs/8.0.0/npm.txt \
+#   && tar xfJ /tmp/node-v8.1.0-linux-x64.tar.xz -C /opt/nodejs \
+#   && rm -f node-v8.1.0-linux-x64.tar.xz \
+#   && mv /opt/nodejs/node-v8.1.0-linux-x64 /opt/nodejs/8.1.0 \
+#   && echo "5.0.3" > /opt/nodejs/8.1.0/npm.txt \
+#   && tar xfJ /tmp/node-v8.2.1-linux-x64.tar.xz -C /opt/nodejs \
+#   && rm -f node-v8.2.1-linux-x64.tar.xz \
+#   && mv /opt/nodejs/node-v8.2.1-linux-x64 /opt/nodejs/8.2.1 \
+#   && echo "5.4.2" > /opt/nodejs/8.2.1/npm.txt \
+#   && tar xfJ /tmp/node-v8.8.1-linux-x64.tar.xz -C /opt/nodejs \
+#   && rm -f node-v8.8.1-linux-x64.tar.xz \
+#   && mv /opt/nodejs/node-v8.8.1-linux-x64 /opt/nodejs/8.8.1 \
+#   && echo "5.4.2" > /opt/nodejs/8.8.1/npm.txt \
+#   && tar xfJ /tmp/node-v8.9.4-linux-x64.tar.xz -C /opt/nodejs \
+#   && rm -f node-v8.9.4-linux-x64.tar.xz \
+#   && mv /opt/nodejs/node-v8.9.4-linux-x64 /opt/nodejs/8.9.4 \
+#   && echo "5.6.0" > /opt/nodejs/8.9.4/npm.txt \
+#   && tar xfJ /tmp/node-v8.11.2-linux-x64.tar.xz -C /opt/nodejs \
+#   && rm -f node-v8.11.2-linux-x64.tar.xz \
+#   && mv /opt/nodejs/node-v8.11.2-linux-x64 /opt/nodejs/8.11.2 \
+#   && echo "5.6.0" > /opt/nodejs/8.11.2/npm.txt \
+#   && tar xfJ /tmp/node-v9.4.0-linux-x64.tar.xz -C /opt/nodejs \
+#   && rm -f node-v9.4.0-linux-x64.tar.xz \
+#   && mv /opt/nodejs/node-v9.4.0-linux-x64 /opt/nodejs/9.4.0 \
+#   && echo "5.6.0" > /opt/nodejs/9.4.0/npm.txt \
+#   && tar xfJ /tmp/node-v10.1.0-linux-x64.tar.xz -C /opt/nodejs \
+#   && rm -f node-v10.1.0-linux-x64.tar.xz \
+#   && mv /opt/nodejs/node-v10.1.0-linux-x64 /opt/nodejs/10.1.0 \
+#   && echo "6.0.1" > /opt/nodejs/10.1.0/npm.txt \
+#   && chown -R root:root /opt/nodejs \
+#   && ln -s /opt/nodejs/6.11.0/bin/node /opt/nodejs/node \
+#   && ln -s /opt/nodejs/6.11.0/npm.txt /opt/nodejs/npm.txt \
+#   && rm -f /usr/bin/node \
+#   && ln -s /opt/nodejs/6.11.0/bin/node /usr/bin/node \
+#   && rm -f /opt/nodejs/6.11.0/bin/npm \
+#   && ln -s /opt/npm/3.10.10/node_modules/npm/bin/npm /opt/nodejs/npm \
+#   && ln -s /opt/npm/3.10.10/node_modules /opt/nodejs/node_modules \
+#   && rm -rf /usr/bin/npm \
+#   && ln -s /opt/npm/3.10.10/node_modules/npm/bin/npm /usr/bin/npm \
+#   && ln -s /opt/npm/3.10.10/node_modules/npm/bin/npm-cli.js /usr/bin/npm-cli.js \
+#   && ln -s /opt/npm/3.10.10/node_modules /usr/bin/node_modules
 
-ENV PATH $PATH:/opt/nodejs/6.11.0/bin
+ENV PATH /opt/nodejs/6.11.0/bin:$PATH
 
 # Upgrade mono
 RUN echo "deb http://download.mono-project.com/repo/debian beta/. main" | tee /etc/apt/sources.list.d/mono-xamarin-c7-ms.list \
@@ -223,19 +223,19 @@ ENV RUBY_CONFIGURE_OPTS=--disable-install-doc
 
 ENV RUBY_CFLAGS=-O3
 
-RUN eval "$(rbenv init -)" \
-  && export WEBSITES_LATEST_NODE_VERSION="2.3.3" \
-  && rbenv install $WEBSITES_LATEST_NODE_VERSION \
-  && rbenv rehash \
-  && rbenv global $WEBSITES_LATEST_NODE_VERSION \
-  && ls /usr/local -a \
-  && gem install bundler --version "=1.13.6"\
-  && chmod -R 777 /usr/local/.rbenv/versions \
-  && chmod -R 777 /usr/local/.rbenv/version
+# RUN eval "$(rbenv init -)" \
+#   && export WEBSITES_LATEST_NODE_VERSION="2.3.3" \
+#   && rbenv install $WEBSITES_LATEST_NODE_VERSION \
+#   && rbenv rehash \
+#   && rbenv global $WEBSITES_LATEST_NODE_VERSION \
+#   && ls /usr/local -a \
+#   && gem install bundler --version "=1.13.6"\
+#   && chmod -R 777 /usr/local/.rbenv/versions \
+#   && chmod -R 777 /usr/local/.rbenv/version
 
-RUN eval "$(rbenv init -)" \
-  && rbenv global $WEBSITES_LATEST_NODE_VERSION \
-  && bundle config --global build.nokogiri -- --use-system-libraries
+# RUN eval "$(rbenv init -)" \
+#   && rbenv global $WEBSITES_LATEST_NODE_VERSION \
+#   && bundle config --global build.nokogiri -- --use-system-libraries
 
 # Because Nokogiri tries to build libraries on its own otherwise
 ENV NOKOGIRI_USE_SYSTEM_LIBRARIES=true
@@ -244,32 +244,32 @@ ENV NOKOGIRI_USE_SYSTEM_LIBRARIES=true
 RUN apt-get install -y unixodbc-dev freetds-dev freetds-bin
 
 # Install .NET Core
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends \
-  libc6 \
-  libcurl3 \
-  libgcc1 \
-  libgssapi-krb5-2 \
-  libicu52 \
-  liblttng-ust0 \
-  libssl1.0.0 \
-  libstdc++6 \
-  libunwind8 \
-  libuuid1 \
-  zlib1g \
-  && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update \
+#   && apt-get install -y --no-install-recommends \
+#   libc6 \
+#   libcurl3 \
+#   libgcc1 \
+#   libgssapi-krb5-2 \
+#   libicu52 \
+#   liblttng-ust0 \
+#   libssl1.0.0 \
+#   libstdc++6 \
+#   libunwind8 \
+#   libuuid1 \
+#   zlib1g \
+#   && rm -rf /var/lib/apt/lists/*
 
 # Install .NET Core SDK
-ENV DOTNET_SDK_VERSION 2.1.300
-ENV DOTNET_SDK_DOWNLOAD_URL https://dotnetcli.blob.core.windows.net/dotnet/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-x64.tar.gz
-ENV DOTNET_SDK_DOWNLOAD_SHA 80a6bfb1db5862804e90f819c1adeebe3d624eae0d6147e5d6694333f0458afd7d34ce73623964752971495a310ff7fcc266030ce5aef82d5de7293d94d13770
+# ENV DOTNET_SDK_VERSION 2.1.300
+# ENV DOTNET_SDK_DOWNLOAD_URL https://dotnetcli.blob.core.windows.net/dotnet/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-x64.tar.gz
+# ENV DOTNET_SDK_DOWNLOAD_SHA 80a6bfb1db5862804e90f819c1adeebe3d624eae0d6147e5d6694333f0458afd7d34ce73623964752971495a310ff7fcc266030ce5aef82d5de7293d94d13770
 
-RUN curl -SL $DOTNET_SDK_DOWNLOAD_URL --output dotnet.tar.gz \
-  && echo "$DOTNET_SDK_DOWNLOAD_SHA dotnet.tar.gz" | sha512sum -c - \
-  && mkdir -p /usr/share/dotnet \
-  && tar -zxf dotnet.tar.gz -C /usr/share/dotnet \
-  && rm dotnet.tar.gz \
-  && ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet
+# RUN curl -SL $DOTNET_SDK_DOWNLOAD_URL --output dotnet.tar.gz \
+#   && echo "$DOTNET_SDK_DOWNLOAD_SHA dotnet.tar.gz" | sha512sum -c - \
+#   && mkdir -p /usr/share/dotnet \
+#   && tar -zxf dotnet.tar.gz -C /usr/share/dotnet \
+#   && rm dotnet.tar.gz \
+#   && ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet
 
 # Moving the package cache to the container image will require user packages to be repopulated
 # for each new build done in a new container instance, but it's *much* faster than
@@ -393,42 +393,42 @@ RUN curl -fL -o /usr/local/go/bin/dep $DEP_DOWNLOAD_URL \
 
 # Section PYTHON
 
-RUN set -ex \
-        \
-        && savedAptMark="$(apt-mark showmanual)" \
-        && apt-get update && apt-get install -y --no-install-recommends \
-                dpkg-dev \
-                gcc \
-                libbz2-dev \
-                libc6-dev \
-                libexpat1-dev \
-                libffi-dev \
-                libgdbm-dev \
-                liblzma-dev \
-                libncursesw5-dev \
-                libreadline-dev \
-                libsqlite3-dev \
-                libssl-dev \
-                apt-transport-https \
-                lsb-release  \
-                ca-certificates \
-                make \
-                tk-dev \
-                tcl-dev \
-                uuid-dev \
-                wget \
-                xz-utils \
-                zlib1g-dev \
-# as of Stretch, "gpg" is no longer included by default
-                $(command -v gpg > /dev/null || echo 'gnupg dirmngr')
+# RUN set -ex \
+#         \
+#         && savedAptMark="$(apt-mark showmanual)" \
+#         && apt-get update && apt-get install -y --no-install-recommends \
+#                 dpkg-dev \
+#                 gcc \
+#                 libbz2-dev \
+#                 libc6-dev \
+#                 libexpat1-dev \
+#                 libffi-dev \
+#                 libgdbm-dev \
+#                 liblzma-dev \
+#                 libncursesw5-dev \
+#                 libreadline-dev \
+#                 libsqlite3-dev \
+#                 libssl-dev \
+#                 apt-transport-https \
+#                 lsb-release  \
+#                 ca-certificates \
+#                 make \
+#                 tk-dev \
+#                 tcl-dev \
+#                 uuid-dev \
+#                 wget \
+#                 xz-utils \
+#                 zlib1g-dev \
+# # as of Stretch, "gpg" is no longer included by default
+#                 $(command -v gpg > /dev/null || echo 'gnupg dirmngr')
 
 
-COPY --from=python-3.6-build /usr/local/python/3.6.6 /usr/local/python/3.6.6
-COPY --from=python-3.7-build /usr/local/openssl /usr/local/openssl
-COPY --from=python-3.7-build /usr/local/python/3.7.0 /usr/local/python/3.7.0
-ENV PATH /usr/local/python/3.7.0/bin:$PATH
-ENV PYTHON_3_7_PATH /usr/local/python/3.7.0/bin
-ENV PYTHON_3_6_PATH /usr/local/python/3.6.6/bin
+# COPY --from=python-3.6-build /usr/local/python/3.6.6 /usr/local/python/3.6.6
+# COPY --from=python-3.7-build /usr/local/openssl /usr/local/openssl
+# COPY --from=python-3.7-build /usr/local/python/3.7.0 /usr/local/python/3.7.0
+ENV PATH /opt/python/3.7.0/bin:$PATH
+ENV PYTHON_3_7_PATH /opt/python/3.7.0/bin
+ENV PYTHON_3_6_PATH /opt/python/3.6/bin
 
 
 # Install Kudu
